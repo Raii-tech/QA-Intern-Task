@@ -24,4 +24,4 @@ python signup_automation.py
 
 ## Test Data
 
-Use dynamically generated email addresses during execution.
+Sucessful
