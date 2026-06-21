@@ -1,28 +1,44 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import os
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# Open Chrome
 driver = webdriver.Chrome()
+wait = WebDriverWait(driver, 10)
 
-# Open website
-driver.get("https://the-internet.herokuapp.com/upload")
+driver.get("https://authorized-partner.vercel.app/")
 
-# Get absolute file path
-file_path = os.path.abspath("test-data/company_registration.pdf")
+# STEP 1: Fill first page fields (example structure)
+wait.until(EC.presence_of_element_located((By.XPATH, "//input")))
 
-# Upload file
-upload_box = driver.find_element(By.CSS_SELECTOR, "input[type='file']")
-upload_box.send_keys(file_path)
+driver.find_element(By.NAME, "name").send_keys("Test User")
+driver.find_element(By.NAME, "email").send_keys("testuser123@mail.com")
+driver.find_element(By.NAME, "password").send_keys("Test@123")
 
-print("File selected successfully!")
+driver.save_screenshot("screenshots/page1.png")
 
-# Click Upload button
-driver.find_element(By.ID, "file-submit").click()
+driver.find_element(By.XPATH, "//button[contains(text(),'Next')]").click()
 
-time.sleep(2)
+# STEP 2: Second page (example structure)
+wait.until(EC.presence_of_element_located((By.XPATH, "//input")))
 
-print("File uploaded successfully!")
+driver.find_element(By.NAME, "phone").send_keys("9800000000")
 
+driver.save_screenshot("screenshots/page2.png")
+
+driver.find_element(By.XPATH, "//button[contains(text(),'Next')]").click()
+
+# STEP 3: Final submit
+wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Submit')]")))
+
+driver.save_screenshot("screenshots/before_submit.png")
+
+driver.find_element(By.XPATH, "//button[contains(text(),'Submit')]").click()
+
+driver.save_screenshot("screenshots/success.png")
+
+print("Signup automation completed")
+
+time.sleep(3)
 driver.quit()
